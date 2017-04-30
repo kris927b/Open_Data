@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <!-- Adding dweet.io js library -->
+  <script src="http://dweet.io/client/dweet.io.min.js"></script>
+
+  <!-- Twitter Bootstrap Links -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <title>Google Maps Multiple Markers</title> 
+  <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
+</head> 
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" style="padding-bottom: 0px;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">
+            <img class="center-block" alt="Brand" src="logo.png" width="40" height="40">
+          </a>
+        </div>
+      </div>
+    </nav>
+    <style type="text/css">
+      .navbar-brand {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          top: 0;
+          text-align: center;
+          margin: auto;
+          padding-top: 5px;
+          display: inline-block;
+      }
+
+      body {
+          overflow:hidden;
+          height: 1000px;
+          width: 1750px;
+      }
+    </style>
+  <div id="map" style="width: 100%; height: 100%;"></div>
+  <script type="text/javascript">
+    var locations = [
+      ['Copenhagen - SensorKit', 55.659717, 12.590793, 1],
+      ['Aarhus - SensorKit', 56.130168, 10.211179, 2]
+    ];
+    
+    function isInfoWindowOpen(infoWindow)
+    {
+        var map = infoWindow.getMap();
+        return (map !== null && typeof map !== "undefined");
+    }
+    
+    /**
+     * Returns a random number between min (inclusive) and max (exclusive)
+     */
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    /**
+     * Returns a random integer between min (inclusive) and max (inclusive)
+     * Using Math.round() will give you a non-uniform distribution!
+     */
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: new google.maps.LatLng(56.258, 9.917),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+        var html;
+
+        var marker, i;
+        var temp, hum, light, sound, wind, date;
+
+        for (i = 0; i < locations.length; i++) {  
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+          
+          console.log(isInfoWindowOpen(infowindow))
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() 
+            {
+                    
+            
+            if (i==0) //ITU
+            
+            {
+            
+            console.log("ITU")
+           
+             dweetio.get_latest_dweet_for("OpenData", function(err, dweet)
+             {
+                 var dweet = dweet[0]; // Dweet is always an array of 1
+                 console.log(dweet.content)
+                 console.log(dweet.created); // The create date of the dweet
+                 
+                 temp = dweet.content.Temperature;
+                 hum= dweet.content.Humidity;
+                 light= dweet.content.Light;
+                 sound= dweet.content.Sound;
+                 wind= dweet.content.WindDirection;
+                 date = dweet.created.toLocaleString();
+             });
+              
+            }
+            if (i==1)
+            {
+
+          dweetio.get_latest_dweet_for("OpenData2", function(err, dweet)
+         {
+             var dweet = dweet[0]; // Dweet is always an array of 1
+             console.log(dweet.content)
+             console.log(dweet.created); // The create date of the dweet
+             
+             temp = dweet.content.Temperature;
+             hum= dweet.content.Humidity;
+             light= dweet.content.Light;
+             sound= dweet.content.Sound;
+             wind= dweet.content.WindDirection;
+             date = dweet.created.toLocaleString();
+         });
+
+/*
+             temp = getRandomInt(15, 30);
+             hum= getRandomInt(0, 100);
+             light= getRandomInt(0, 1000);
+             sound= getRandomInt(20, 250);
+             wind= getRandomInt(0, 360);
+             date = new Date().toLocaleString();
+            console.log("Aarhus")
+            */
+        }
+        
+        html = "<u>" + locations[i][0] + "</u> <br/>" +
+        "<br/>" + "<b>" + "Temperature: </b> " + temp + " °C" +
+                        "<br/>" + "<b>" + "Humidity: </b>" + hum + " %rH" +
+                        "<br/>" + "<b>" + "Light: </b>" + light + " lum" +
+                        "<br/>" + "<b>" + "Sound: </b>" + sound + " db" +
+                        "<br/>" + "<b>" + "Wind direction: </b>" + wind + " °" +
+                        "<br/>" + "<b>" + "Date: </b>" + date;
+
+                 
+
+          infowindow.setContent(locations[i][0]);
+          infowindow.setContent(html)                   
+          infowindow.open(map, marker);
+          
+        }
+
+      })(marker, i));
+    }
+  </script>
+</body>
+</html>

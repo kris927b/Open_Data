@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <!-- Adding dweet.io js library -->
+  <script src="http://dweet.io/client/dweet.io.min.js"></script>
+
+  <!-- Twitter Bootstrap Links -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <title>Open Data API</title> 
+  <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
+</head> 
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" style="padding-bottom: 0px;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">
+            <img class="center-block" alt="Brand" src="logo.png" width="40" height="40">
+          </a>
+        </div>
+      </div>
+    </nav>
+    <style type="text/css">
+      .navbar-brand {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          top: 0;
+          text-align: center;
+          margin: auto;
+          padding-top: 5px;
+          display: inline-block;
+      }
+
+      .container {
+          padding-top: 100px;
+      }
+    </style>
+    <div class="container">
+      <h1 style="text-align: center;">OpenData API</h1>
+      <br>
+      <div class="panel panel-default">
+        <div class="panel-heading get">
+          <h3 class="panel-title">GET data/from/{city}</h3>
+        </div>
+        <div class="panel-body">
+          <p>Get all data from a specific city</p>
+          <p>Requirements:</p>
+          <ul>
+           <li>City - The city you want to fetch data from</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading get">
+          <h3 class="panel-title">GET data/{data point}/from/{city}</h3>
+        </div>
+        <div class="panel-body">
+          <p>Get a specific type of data from a specific city</p>
+          <p>Requirements:</p>
+          <ul>
+           <li>Data point - What kind of data you want to get</li>
+           <li>City - The city you want to fetch data from</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading get">
+          <h3 class="panel-title">GET data/{data point}/from/{country}</h3>
+        </div>
+        <div class="panel-body">
+          <p>Get a specific type of data from a specific country</p>
+          <p>Requirements:</p>
+          <ul>
+           <li>Data point - What kind of data you want to get</li>
+           <li>Country - The country you want to fetch data from</li>
+          </ul>
+        </div>
+      </div>
+
+      <br>
+      <hr>
+      <br>
+      <br>
+
+      <div class="panel panel-default">
+        <div class="panel-heading post">
+          <h3 class="panel-title">POST data/from/{city}/{data}</h3>
+        </div>
+        <div class="panel-body">
+          <p>Post a specific type of data from a specific city</p>
+          <p>Requirements:</p>
+          <ul>
+           <li>City - The city you want to post data from</li>
+           <li>Data - The data you want to post. It needs to follow the form of JSON</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading post">
+          <h3 class="panel-title">POST data/from/{country}/{data}</h3>
+        </div>
+        <div class="panel-body">
+          <p>Post a specific type of data from a specific city</p>
+          <p>Requirements:</p>
+          <ul>
+           <li>Country - The country you want to post data from</li>
+           <li>Data - The data you want to post. It needs to follow the form of JSON. The data needs to specify which city each data point comes from</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

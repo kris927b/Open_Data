@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Data Platform</title>
+
+     <!-- Jquery Library -->
+    <script src="./flot/jquery.js"></script>
+    <script src="./flot/jquery.flot.js"></script>
+    <script src="./flot/jquery.flot.time.js"></script>
+    <script src="jquery.transit.min.js"></script>
+    
+     <!-- Adding dweet.io js library -->
+    <script src="http://dweet.io/client/dweet.io.min.js"></script>
+
+    <!-- Twitter Bootstrap Links -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div id="logo" class="col-md-6 col-md-offset-3">
+            <a href="index.html">
+                <img src="logo.png" class="img-rounded img-responsive center-block" alt="Responsive image" width="75%" height="75%">
+            </a>
+        </div>
+        <div id="media" class="media col-md-6 col-md-offset-3">
+            <div class="media-body">
+                <div id="input" class="input-group">
+                    <input id="dweetBox" type="text" class="form-control" placeholder="Enter Keyword.. e.g. Copenhagen light" aria-describedby="basic-addon1">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="sendDweet"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </span>
+                </div>
+            </div>
+            <div class="media-right">
+                <a href="map_site.html">
+                    <img src="map_logo.svg" class="img-rounded" width="40" height="40">
+                </a>
+            </div>
+        </div>
+        <div id="timeline" class="col-md-6 col-md-offset-3">
+            <script type="text/javascript">
+                // Send a dweet with a name you define
+                $(document).ready(function(){
+                    $('#sendDweet').click(function(){
+                        searchTerm = $("#dweetBox").val();
+                        $("#timeline").empty();
+                        $("#timeline").append("<h2>Sensor Data - " + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1) + "</h2>");
+                        $("#logo").transition({ scale: 0.5, y: -200 }, 500, 'linear'); 
+                        $("#media").transition({ y: -200 }, 500, 'linear');
+                        $("#timeline").transition({ y: -200 }, 500, 'linear');
+                        $("#graph").transition({ y: -200 }, 500, 'linear');
+                        split_str = searchTerm.split(" ");
+                        var thing = "";
+                        console.log(split_str);
+                        if(split_str[0].toLowerCase() === "copenhagen" || split_str[1].toLowerCase() === "copenhagen") {
+                            thing = "OpenData";
+                        } else {
+                            thing = "OpenData2";
+                        }
+                        console.log(thing);
+                        dweetio.get_all_dweets_for("OpenData2", function(err, dweets){
+                            var data = [];
+                            // Dweets is an array of dweets
+                            for(theDweet in dweets)
+                            {
+                                var dweet = dweets[theDweet];
+
+                                //console.log(dweet.thing); // The generated name
+                                //console.log(dweet.content); // The content of the dweet
+                                for(item in dweet.content) 
+                                {
+                                    //console.log(item)
+                                    value = dweet.content[item];
+                                    if(item.toLowerCase() == split_str[0].toLowerCase() || item.toLowerCase() == split_str[1].toLowerCase()) {
+                                        d1 = new Date(dweet.created);
+                                        d2 = new Date(d1);
+                                        d2.setHours ( d1.getHours() + 2 );
+                                        data.push([d2, value]);
+                                    }
+                                }
+                                //console.log(dweet.created); // The create date of the dweet
+                            }
+
+                            $.plot($("#graph"), [{
+                                data: data,
+                                lines: { show: true, steps: false }
+                            }], {
+                                xaxis: {
+                                    mode: "time",
+                                    timeformat: "%H:%M:%S"
+                                }
+                            });
+
+
+                        });
+                    }); //Click listener on #sendDweet ends here
+
+                    $('#dweetBox').keypress(function(e){
+                        if(e.which == 13){//Enter key pressed
+                            $('#sendDweet').click();//Trigger search button click event
+                        }
+                    });
+
+                    $("#dweetBox").keyup(function(e){
+                        if($("#dweetBox").val() === "") {
+                            console.log("Empty");
+                            $("#timeline").empty();
+                            $("#graph").empty();
+                            $("#logo").transition({ scale: 1, y: 0 }, 500, 'linear'); 
+                            $("#media").transition({ y: 0 }, 500, 'linear');
+                            $("#timeline").transition({ y: 0 }, 500, 'linear');
+                            $("#graph").transition({ y: 0 }, 500, 'linear');
+                        }
+                    });
+                }); //Document.ready ends here
+            </script>
+        </div>
+        <div class="col-md-6 col-md-offset-3" id="graph" style="width:600px;height:300px;"></div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container_f">
+        <a href="api_site.html" class="foot">
+            <p class="text-muted">Go to the API</p>
+        </a>
+    </div>
+</footer>
+<style type="text/css">
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      /* Margin bottom by footer height */
+      margin-bottom: 60px;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      /* Set the fixed height of the footer here */
+      height: 60px;
+      background-color: #f5f5f5;
+        text-align: center;
+    }
+
+    .foot {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          left: 0;
+          text-align: center;
+          margin: auto;
+          padding-top: 5px;
+          display: inline-block;
+          font-size: 30px;
+    }
+</style>
+</body>
+</html>
